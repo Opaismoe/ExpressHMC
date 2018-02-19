@@ -26,7 +26,6 @@ const getPlayers = (req, res, next) => {
 
         return {
           userId: player.userId,
-          pairs: player.pairs,
           name
         }
       })
