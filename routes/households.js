@@ -1,4 +1,3 @@
-// routes/households.js
 const router = require('express').Router()
 const passport = require('../config/auth')
 const { Household } = require('../models')
