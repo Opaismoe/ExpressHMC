@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const passport = require('../config/auth')
-const { Household } = require('../models')
+const { Grocery } = require('../models')
 const utils = require('../lib/utils')
 
 const authenticate = passport.authorize('jwt', { session: false })
@@ -8,18 +8,15 @@ const authenticate = passport.authorize('jwt', { session: false })
 module.exports = io => {
   router
     .get('/grocerys', (req, res, next) => {
-      Household.find()
-        // Newest grocerys first
+      Grocery.find()
         .sort({ createdAt: -1 })
-        // Send the data in JSON format
         .then((grocerys) => res.json(grocerys))
-        // Throw a 500 error if something goes wrong
         .catch((error) => next(error))
     })
     .get('/grocerys/:id', (req, res, next) => {
       const id = req.params.id
 
-      Household.findById(id)
+      Grocery.findById(id)
         .then((grocery) => {
           if (!grocery) { return next() }
           res.json(grocery)
@@ -27,20 +24,15 @@ module.exports = io => {
         .catch((error) => next(error))
     })
     .post('/grocerys', authenticate, (req, res, next) => {
-      const newHousehold = {
+      const newGrocery = {
         userId: req.account._id,
-        players: [{
-          userId: req.account._id,
-          pairs: []
-        }],
-        cards: utils.shuffle('✿✪♦✵♣♠♥✖'.repeat(2).split(''))
-          .map((symbol) => ({ visible: false, symbol }))
       }
+      console.log(userId)
 
-      Household.create(newHousehold)
+      Grocery.create(newGrocery)
         .then((grocery) => {
           io.emit('action', {
-            type: 'GROCERY_LIST_CREATED',
+            type: 'ADD_GROCERY',
             payload: grocery
           })
           res.json(grocery)
@@ -49,9 +41,9 @@ module.exports = io => {
     })
     .put('/grocerys/:id', authenticate, (req, res, next) => {
       const id = req.params.id
-      const updatedHousehold = req.body
+      const updatedGrocery = req.body
 
-      Household.findByIdAndUpdate(id, { $set: updatedHousehold }, { new: true })
+      Grocery.findByIdAndUpdate(id, { $set: updatedGrocery }, { new: true })
         .then((grocery) => {
           io.emit('action', {
             type: 'GROCERY_LIST_UPDATED',
@@ -63,15 +55,15 @@ module.exports = io => {
     })
     .patch('/grocerys/:id', authenticate, (req, res, next) => {
       const id = req.params.id
-      const patchForHousehold = req.body
+      const patchForGrocery = req.body
 
-      Household.findById(id)
+      Grocery.findById(id)
         .then((grocery) => {
           if (!grocery) { return next() }
 
-          const updatedHousehold = { ...grocery, ...patchForHousehold }
+          const updatedGrocery = { ...grocery, ...patchForGrocery }
 
-          Household.findByIdAndUpdate(id, { $set: updatedHousehold }, { new: true })
+          Grocery.findByIdAndUpdate(id, { $set: updatedGrocery }, { new: true })
             .then((grocery) => {
               io.emit('action', {
                 type: 'GROCERY_LIST_UPDATED',
@@ -85,7 +77,7 @@ module.exports = io => {
     })
     .delete('/grocerys/:id', authenticate, (req, res, next) => {
       const id = req.params.id
-      Household.findByIdAndRemove(id)
+      Grocery.findByIdAndRemove(id)
         .then(() => {
           io.emit('action', {
             type: 'GROCERY_LIST_REMOVED',
