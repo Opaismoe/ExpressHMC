@@ -26,10 +26,9 @@ module.exports = io => {
     //     .catch((error) => next(error))
     // })
     .post('/grocerys', authenticate, (req, res, next) => {
-      console.log('your here')
       const userId = req.account._id
-      const newGrocery = { ...req.body, user: userId}
-
+      const newGrocery = {...res.body}
+      console.log(newGrocery)
       Grocery.create(newGrocery)
         .then((grocery) => {
           io.emit('action', {
