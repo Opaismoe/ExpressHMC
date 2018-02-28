@@ -28,8 +28,6 @@ module.exports = io => {
     .post('/grocerys', authenticate, (req, res, next) => {
       const userId = req.account._id
       const newGrocery = { ...req.body, user: userId }
-      console.log(`req.body ->`+ req.body.text)
-      // console.log({...res.body})
       Grocery.create(newGrocery)
         .then((grocery) => {
           io.emit('action', {
@@ -82,7 +80,7 @@ module.exports = io => {
       Grocery.findByIdAndRemove(id)
         .then(() => {
           io.emit('action', {
-            type: 'GROCERY_LIST_REMOVED',
+            type: 'REMOVE_GROCERY',
             payload: id
           })
           res.status = 200
