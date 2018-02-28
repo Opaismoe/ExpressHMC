@@ -75,7 +75,7 @@ module.exports = io => {
         })
         .catch((error) => next(error))
     })
-    .delete('/grocerys/:id', authenticate, (req, res, next) => {
+    .delete('/grocerys', authenticate, (req, res, next) => {
       const id = req.params.id
       Grocery.findByIdAndRemove(id)
         .then(() => {
