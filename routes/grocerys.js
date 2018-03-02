@@ -27,9 +27,9 @@ module.exports = io => {
     // })
     .post('/grocerys', authenticate, (req, res, next) => {
       const userId = req.account._id
-      const newGrocery = { ...req.body, user: userId }
-      console.log(`req.body ->`+ req.body.text)
-      // console.log({...res.body})
+      const newGrocery = { ...req.body, userId: userId }
+      console.log(`req.body ->`+ req.body.userId)
+      console.log({...req.body})
       Grocery.create(newGrocery)
         .then((grocery) => {
           io.emit('action', {
