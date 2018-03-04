@@ -13,18 +13,7 @@ module.exports = io => {
         .then((grocerys) => res.json(grocerys))
         .catch((error) => next(error))
     })
-
-    // Don't think ill need this.
-    // .get('/grocerys/:id', (req, res, next) => {
-    //   const id = req.params.id
-    //
-    //   Grocery.findById(id)
-    //     .then((grocery) => {
-    //       if (!grocery) { return next() }
-    //       res.json(grocery)
-    //     })
-    //     .catch((error) => next(error))
-    // })
+    
     .post('/grocerys', authenticate, (req, res, next) => {
       const userId = req.account._id
       const newGrocery = { ...req.body, userId: userId }
