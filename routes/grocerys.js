@@ -13,12 +13,10 @@ module.exports = io => {
         .then((grocerys) => res.json(grocerys))
         .catch((error) => next(error))
     })
-    
+
     .post('/grocerys', authenticate, (req, res, next) => {
-      const userId = req.account._id
-      const newGrocery = { ...req.body, userId: userId }
-      console.log(`req.body ->`+ req.body.userId)
-      console.log({...req.body})
+      const user = req.account._id
+      const newGrocery = { ...req.body, user: user }
       Grocery.create(newGrocery)
         .then((grocery) => {
           io.emit('action', {
