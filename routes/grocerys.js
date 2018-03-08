@@ -9,7 +9,7 @@ module.exports = io => {
   router
     .get('/grocerys', (req, res, next) => {
       Grocery.find()
-        .sort({ createdAt: -1 })
+        .sort({ createdAt: 1 })
         .then((grocerys) => res.json(grocerys))
         .catch((error) => next(error))
     })
@@ -24,7 +24,6 @@ module.exports = io => {
             payload: grocery
           })
           res.json(grocery)
-          console.log(newGrocery)
         })
         .catch((error) => next(error))
     })
