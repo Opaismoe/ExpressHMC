@@ -10,8 +10,9 @@ router.post('/sessions', function(req, res, next) {
       return next(err);
     }
     if (!user) {
-      const error = new Error(info.message)
-      return next(error);
+      const errors = new Error(info.message)
+      // gives the correct error
+      return next(errors);
     }
 
     const payload = { id: user._id }
