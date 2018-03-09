@@ -27,6 +27,7 @@ module.exports = io => {
         })
         .catch((error) => next(error))
     })
+
     .put('/grocerys/:id', authenticate, (req, res, next) => {
       const id = req.params.id
       const updatedGrocery = req.body
@@ -41,6 +42,7 @@ module.exports = io => {
         })
         .catch((error) => next(error))
     })
+
     .patch('/grocerys/:id', authenticate, (req, res, next) => {
       const id = req.params.id
       const patchForGrocery = req.body
@@ -63,12 +65,13 @@ module.exports = io => {
         })
         .catch((error) => next(error))
     })
+
     .delete('/grocerys', authenticate, (req, res, next) => {
       const id = req.params.id
       Grocery.findByIdAndRemove(id)
         .then(() => {
           io.emit('action', {
-            type: 'REMOVE_GROCERY',
+            type: 'REMOVE_GROCERYS',
             payload: id
           })
           res.status = 200

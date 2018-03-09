@@ -7,16 +7,17 @@ const authenticate = passport.authorize('jwt', { session: false })
 
 module.exports = io => {
   router
-    .get('/households', (req, res, next) => {
+    .get('/household', (req, res, next) => {
       Household.find()
-        // Newest households first
+        // Newest household first
         .sort({ createdAt: -1 })
         // Send the data in JSON format
-        .then((households) => res.json(households))
+        .then((household) => res.json(household))
         // Throw a 500 error if something goes wrong
         .catch((error) => next(error))
     })
-    .get('/households/:id', (req, res, next) => {
+
+    .get('/household/:id', (req, res, next) => {
       const id = req.params.id
 
       Household.findById(id)
@@ -26,7 +27,7 @@ module.exports = io => {
         })
         .catch((error) => next(error))
     })
-    .post('/households', authenticate, (req, res, next) => {
+    .post('/household', authenticate, (req, res, next) => {
       const newHousehold = {
         userId: req.account._id,
         players: [{
@@ -47,7 +48,7 @@ module.exports = io => {
         })
         .catch((error) => next(error))
     })
-    .put('/households/:id', authenticate, (req, res, next) => {
+    .put('/household/:id', authenticate, (req, res, next) => {
       const id = req.params.id
       const updatedHousehold = req.body
 
@@ -61,7 +62,7 @@ module.exports = io => {
         })
         .catch((error) => next(error))
     })
-    .patch('/households/:id', authenticate, (req, res, next) => {
+    .patch('/household/:id', authenticate, (req, res, next) => {
       const id = req.params.id
       const patchForHousehold = req.body
 
@@ -83,7 +84,7 @@ module.exports = io => {
         })
         .catch((error) => next(error))
     })
-    .delete('/households/:id', authenticate, (req, res, next) => {
+    .delete('/household/:id', authenticate, (req, res, next) => {
       const id = req.params.id
       Household.findByIdAndRemove(id)
         .then(() => {

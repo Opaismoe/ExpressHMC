@@ -1,18 +1,6 @@
 const mongoose = require('../config/database')
 const { Schema } = mongoose
 
-const potSchema = new Schema({
-  totalAmount: { type: Number, default: 0 },
-})
-
-const householdSchema = new Schema({
-  householdCount: { type: Number, default: 0 },
-  householdPot: { type: Number, default: 0 },
-  week: { type: Number, default: 0 },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
-
 const grocerySchema = new Schema({
   text: { type: String, default: '' },
   price: { type: Number, default: 0 },
@@ -20,9 +8,19 @@ const grocerySchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   user: { type: Schema.Types.ObjectId, ref: 'users'},
-  pot: [potSchema],
-  household: [householdSchema],
+  householdId: { type: Schema.Types.ObjectId, ref: 'household'}
 });
+
+const householdSchema = new Schema({
+  name: { type: String, default: 'householdName' },
+  count: { type: Number, default: 0 },
+  pot: { type: Number, default: 0 },
+  week: { type: Number, default: 0 },
+  grocerys: [grocerySchema],
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
 
 
 module.exports = mongoose.model('grocerys', grocerySchema)
